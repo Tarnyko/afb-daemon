@@ -1,0 +1,22 @@
+<!-- comment -->
+
+---
+name: mysample
+url:  /sample
+controller:   SampleController as ctrl
+animationIn: slideInRight
+---
+
+<h1><img class="logo" src="images/logo/triskel_iot_bzhx250.png" alt="IoT.bzh Logo" style="height:150px;"> Sample Page</h1>
+
+<div class="sample-box box-content">
+    
+    <upload-file name="avatar" category="avatars" icon="tux-visitor.png"></upload-file>
+    
+    <submit-button class="sample-button"  icon="fi-zoom-in" label="Vol+"   clicked="ctrl.MuteOn" ></submit-button>
+    <submit-button class="sample-button" icon="fi-zoom-out" label="Vol-" clicked="ctrl.MuteOff" ></submit-button>
+    <submit-button class="home-button"  icon="fi-upload" label="Refresh"   clicked="ctrl.UploadFile" ></submit-button>
+
+</div>
+
+<link-button href="home" icon="fi-home" label="home"></link-button>

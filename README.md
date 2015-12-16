@@ -4,7 +4,7 @@
 Install HTML5 development toolchain on your host
 
     1. Check out this repository
-       git clone https://github.com/iotbzh/afb-client-sample.git
+       git clone https://github.com/iotbzh/afb-client.git
 
     2) Install NodeJs [not used on target] 
         zypper install nodejs
@@ -18,7 +18,7 @@ Install HTML5 development toolchain on your host
        install [livereload Chrome extension](https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei)
 
 
-### Overload ./etc/Defaults.js with '.noderc.js'
+### Overload ./app/etc/AppDefaults.js with '.noderc.js'
     var config= {
         APPNAME : 'AFBclient',   // AppName is use as main Angular Module name
         FRONTEND: "Frontend",    // HTML5 frontend  [no leading ./]

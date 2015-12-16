@@ -1,0 +1,33 @@
+<!-- comment -->
+
+---
+name: myhome
+url:  /home
+controller:   HomeController as ctrl
+animationIn: slideInRight
+---
+
+<h3> 
+<img class="logo" src="images/logo/triskel_iot_bzhx250.png" alt="IoT.bzh Logo" style="height:150px;">
+  App Framework Binder Simple Client 
+</h3>
+
+
+
+<div class="button-box box-content ">
+      
+    <submit-button class="session-button {{ctrl.APIcreate}}"  icon="fi-unlock" label="Open" clicked="ctrl.OpenSession" ></submit-button>
+    <submit-button class="session-button {{ctrl.APIcheck}}" icon="fi-checkbox" label="Check" clicked="ctrl.CheckSession" ></submit-button>
+    <submit-button class="session-button {{ctrl.APIrefresh}}"  icon="fi-arrows-compress" label="Refresh"   clicked="ctrl.RefreshSession" ></submit-button>
+    <submit-button class="session-button {{ctrl.APIreset}}" icon="fi-lock" label="Close" clicked="ctrl.ResetSession" ></submit-button>
+    
+</div>
+<div class="message-box box-content vertical grid-frame">
+    <div class="response">
+        <span class="grid-content noscroll req {{ctrl.status}} ">req= {{ctrl.request}}</span>
+        <span class="grid-content noscroll res {{ctrl.status}} ">res= {{ctrl.response}}</span>
+        <span class="grid-content noscroll status {{ctrl.status}}">status= {{ctrl.errcode}}</span>
+    </div>
+</div>
+
+<link-button href="sample" icon="fi-home" label="sample"></link-button>
