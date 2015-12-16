@@ -1,7 +1,7 @@
 {
-  "name": "AudioClient",
+  "name": "AFBclient",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/iotbzh/healthy-gulp-angular-foundation6"

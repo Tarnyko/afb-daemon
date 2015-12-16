@@ -7,8 +7,8 @@ Install HTML5 development toolchain on your host
        git clone https://github.com/iotbzh/afb-client.git
 
     2) Install NodeJs [not used on target] 
-        zypper install nodejs
-        yum install nodejs
+       zypper install nodejs
+       yum install nodejs
 
     3) Install building tools [bower, gulp, ....]
        npm install # this install all development tool chain dependencies
