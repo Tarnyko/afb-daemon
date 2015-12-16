@@ -21,6 +21,12 @@
 $COLOR_SUCCESS: green;
 $COLOR_FAIL: red;
 
+token-refresh {
+    display: block;
+    float: right;
+    margin: .5rem 1rem 0 0;
+}
+
 .button-box {
     height  : 4.5rem;
     

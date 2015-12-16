@@ -20,6 +20,7 @@
     'SampleModule',
     'UploadFile',
     'LinkButton',
+    'TokenRefresh',
     'ModalNotification'
   ])
     .config(config)

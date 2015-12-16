@@ -1,10 +1,10 @@
 (function() {
 'use strict';
 
-  var INITIAL_TOKEN=123456789;  // should match with --token=xxxx binder command line
+// WARNING: make sure than app/frontend/services/ConfigApp.js match your server
 
 // list all rependencies within the page + controler if needed
-angular.module('HomeModule', ['SubmitButton'])
+angular.module('HomeModule', ['SubmitButton', 'TokenRefresh'])
 
   .controller('HomeController', function ($http, ConfigApp) {
         var scope = this; // I hate JavaScript
@@ -21,6 +21,11 @@ angular.module('HomeModule', ['SubmitButton'])
             scope.errcode= errcode;
             scope.request  = data.request;
             scope.response = data.response;
+            
+            // if token was refresh let's update ConfigApp
+            if (data.request.token) ConfigApp.session.token = data.request.token;
+            if (data.request.uuid)  ConfigApp.session.uuid  = data.request.uuid;
+            if (data.request.timeout)  ConfigApp.session.timeout  = data.request.timeout;
 
             // Make sure we clean everything when Open/Close is called
             if (apiname === "APIcreate" || apiname === "APIreset") {
@@ -51,7 +56,7 @@ angular.module('HomeModule', ['SubmitButton'])
         scope.OpenSession = function() {
             console.log ("OpenSession"); 
             var postdata= {/* any json your application may need */};
-            var handler = $http.post(ConfigApp.api.token + 'create?token='+INITIAL_TOKEN, postdata);
+            var handler = $http.post(ConfigApp.api.token + 'create?token='+ConfigApp.session.token, postdata);
             
             handler.success(scope.ProcessResponse);
             handler.error(scope.ProcessError);
