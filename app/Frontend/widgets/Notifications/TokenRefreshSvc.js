@@ -25,11 +25,10 @@
     'use strict';
 
     var template =
-          '<div class="afb-monitor">'
-        + '<span class="afb-refresh-token" ng-click="getping" >afb://{{hostname}}:{{httpdport}}</span>'
-        + '<i class="{{icon}}"></i>'
-        + '</div>'
-        ;
+          '<div class="afb-monitor" ng-click="getping()">' +
+         '<span class="afb-refresh-token"  >afb://{{hostname}}:{{httpdport}}</span>' +
+         '<i class="{{icon}}"></i>' +
+         '</div>';
 
 
 // scope module is load statically before any route is cativated
@@ -39,7 +38,7 @@ angular.module('TokenRefresh', [])
 
     function mymethods(scope, elem, attrs) {
         
-        scope.status;
+        scope.status=false;
     
         scope.online = function () {
             elem.addClass    ("online");
@@ -54,10 +53,10 @@ angular.module('TokenRefresh', [])
         // Check Binder status
         scope.getping = function() {
 
-            var handler = $http.get(ConfigApp.api.ping+'xx?token='+ ConfigApp.session.token);
+            var handler = $http.post(ConfigApp.session.ping+'?token='+ ConfigApp.session.token);
             handler.success(function(response, errcode, headers, config) {
                 if (!scope.status)  {
-                    Notification.success ({message: "AFB Back to Live", delay: 3000});
+                    Notification.success ({message: "AppFramework Binder Back to Live", delay: 3000});
                     scope.online();
                 }
                 scope.status = 1;
@@ -65,7 +64,7 @@ angular.module('TokenRefresh', [])
 
             handler.error(function(response, errcode, headers) {
                 if (scope.status)  {
-                    Notification.warning ({message: "AFB Lost", delay: 5000});
+                    Notification.warning ({message: "AppFramework Binder Lost", delay: 5000});
                     scope.offline();
                 }
                 scope.status = 0;
@@ -77,8 +76,8 @@ angular.module('TokenRefresh', [])
         
         // Check Binder status
         scope.refresh = function() {
-            var handler = $http.get(ConfigApp.api.refresh+'?token='+ ConfigApp.session.token);
-            $timeout (scope.refresh, ConfigApp.session.timeout *800);
+            var handler = $http.post(ConfigApp.session.refresh+'?token='+ ConfigApp.session.token);
+            $timeout (scope.refresh, ConfigApp.session.timeout *250);
         };
  
         scope.icon      = attrs.icon   || "fi-lightbulb";

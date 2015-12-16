@@ -46,10 +46,18 @@ tip-modal {
     }
 }
 
+token-refresh {
+    @include ibz-button(grey,1rem)
+    i {margin-left: .5rem;}
+    margin-right: 1rem;
+}
+
 token-refresh.online {
-    color: blue;
+    color: #0066cc;
+    i {color: lime;}    
 }
 
 token-refresh.offline {
-    color: red;
+    color: #ff00ff;
+    i {color: red;}    
 }
