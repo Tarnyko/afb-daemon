@@ -21,10 +21,11 @@
                     session: { // Those data are updated by session service
                        refresh : '/api/token/refresh',
                        ping    : '/api/token/check',
-                       token   : '123456789',  // typical dev initial token
+                       initial : '123456789',  // typical dev initial token
                        timeout : 3600,         // timeout is updated client sessin context creation
+                       pingrate: 60,           // Ping rate to check if server is still alive
                        uuid    : '',           // uuid map with cookie or long term session access key
-                       pingrate: 60            // Ping rate to check if server is still alive
+                       token   : ''            // will be returned from authentication    
                     }
                 };
 

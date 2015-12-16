@@ -56,7 +56,7 @@ angular.module('HomeModule', ['SubmitButton', 'TokenRefresh'])
         scope.OpenSession = function() {
             console.log ("OpenSession"); 
             var postdata= {/* any json your application may need */};
-            var handler = $http.post(ConfigApp.api.token + 'create?token='+ConfigApp.session.token, postdata);
+            var handler = $http.post(ConfigApp.api.token + 'create?token='+ConfigApp.session.initial, postdata);
             
             handler.success(scope.ProcessResponse);
             handler.error(scope.ProcessError);
