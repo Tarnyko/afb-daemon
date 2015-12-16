@@ -40,13 +40,16 @@ Install HTML5 development toolchain on your host
     gulp watch-dev 
     http://localhost:3001/opa  /* debug mock api base on Backend/RestApi */
 
-### Test with Application server binder  [you may safely run gulp 'watch-dev' + 'afb-daemon' simultaneously]
-    export MYWORKSPACE=$HOME/Workspace
-    $MYWORKSPACE/afb-daemon/build/afb-daemon --port=1234 --verbose --token=123456789 --rootdir=$MYWORKSPACE/afb-client/dist.dev
-    http://localhost:1234/opa
+### Test with Application server binder
+
+    # Start AppFramework Binder
+        export MYWORKSPACE=$HOME/Workspace
+        $MYWORKSPACE/afb-daemon/build/afb-daemon --port=1234 --verbose --token=123456789 --rootdir=$MYWORKSPACE/afb-client/dist.dev
+
+    Point your browser onto: http://localhost:1234/opa
 
     Note: 
-      - do not forget "/opa" that should match with your config.URLBASE
+      - do not forget '/opa' that should match with your config.URLBASE
       - if you change --token=xxxx do not forget to update ./Frontend/pages/HomeModules.js
       - Force HTML/OPA reload with F5 after each HTML5/OPA update or new pages may not be loaded. 
       - When reloading HTML/OPA with F5 do not forget that your initial token wont be accepted anymore. You should either restart to clean existing session or cleanup AJB_session cookie.
