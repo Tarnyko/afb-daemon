@@ -3,19 +3,19 @@
 
 Install HTML5 development toolchain on your host
 
-1. Check out this repository
-   git clone https://github.com/iotbzh/afb-client-sample.git
+    1. Check out this repository
+       git clone https://github.com/iotbzh/afb-client-sample.git
 
-2) Install NodeJs [not used on target] 
-    zypper install nodejs
-    yum install nodejs
+    2) Install NodeJs [not used on target] 
+        zypper install nodejs
+        yum install nodejs
 
-3) Install building tools [bower, gulp, ....]
-   npm install # this install all development tool chain dependencies
-   sudo npm install --global gulp  # this is not mandatory but it will make your live simpler
+    3) Install building tools [bower, gulp, ....]
+       npm install # this install all development tool chain dependencies
+       sudo npm install --global gulp  # this is not mandatory but it will make your live simpler
 
-4. For livereload functionality [automatic refresh of HTML/CSS]
-   install [livereload Chrome extension](https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei)
+    4. For livereload functionality [automatic refresh of HTML/CSS]
+       install [livereload Chrome extension](https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei)
 
 
 ### Overload ./etc/Defaults.js with '.noderc.js'
