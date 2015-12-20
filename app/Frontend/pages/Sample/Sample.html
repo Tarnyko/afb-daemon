@@ -21,14 +21,14 @@ animationIn: slideInRight
          accept = [image] acceptable accept for upload
     -->
     <upload-image name="avatar" category="avatar" thumbnail="tux-visitor.png" maxsize="100" 
-        posturl="/api/post/upload-image" callback="ctrl.FileUploaded" accept="image">
+        posturl="/api/post/upload-image" callback="ctrl.FileUploaded" accept="image" title="Change your Avatar">
     </upload-image>
     
     <!-- Warning: name=xxx should match with what server expect [used as xform input name -->
-    <upload-audio  name=music posturl="/api/post/upload-music" callback="ctrl.FileUploaded"></upload-audio>
+    <upload-audio  name=music posturl="/api/post/upload-music" callback="ctrl.FileUploaded" title="Upload your Music"></upload-audio>
 
     <!-- Warning: name=xxx should match with what server expect [used as xform input name -->
-    <upload-appli  name=appli posturl="/api/post/upload-appli" callback="ctrl.FileUploaded"></upload-appli>
+    <upload-appli  name=appli posturl="/api/post/upload-appli" callback="ctrl.FileUploaded" title="Upload AGL App"></upload-appli>
 
 </div>
 

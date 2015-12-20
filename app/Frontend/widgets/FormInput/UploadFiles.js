@@ -22,12 +22,11 @@
  *   https://stuk.github.io/jszip/documentation/howto/read_zip.html
  *   http://onehungrymind.com/zip-parsing-jszip-angular/
  *   http://stackoverflow.com/questions/15341912/how-to-go-from-blob-to-arraybuffer
+ *   
+ *   Bugs: zip file sent even when flag as invalid 
  */
 
-   
-function changeInput() {
-     console.log ('input imgClicked'); 
-}   
+ 
 
 (function() {
 'use strict';
@@ -39,10 +38,6 @@ var tmpl =  '<input type="file" name="{{name}}-input" onchange="angular.element(
             '<range-slider ng-show="!noslider" id="{{name}}-slider" automatic=true inithook="SliderInitCB"></range-slider>' +
             '</div>';
     
-
-function Basename(path) {
-   return path.split('/').reverse()[0];
-}
 
 // Service Create xform insert files in and Post it to url
 function LoadFileSvc (scope, elem, posturl, files, thumbnailCB) {
@@ -105,16 +100,18 @@ function LoadFileSvc (scope, elem, posturl, files, thumbnailCB) {
             return;
         }
 
-        scope.Basename=Basename(file.name);
+        scope.Basename= file.name.split('/').reverse()[0];
         scope.imgElem[0].file = file;
 
         // If File is an image let display it now
         if (thumbnailCB) {
             var reader = new FileReader();
             reader.readAsArrayBuffer(file);
-            reader.onload = thumbnailCB;
-        }
-
+            reader.onload = function (target) {
+                var status = thumbnailCB (target);
+                //if (status) xform.append(scope.name, file, file.name);
+            };
+        } 
         // if everything is OK let's add file to xform
         xform.append(scope.name, file, file.name);
     }
@@ -123,7 +120,7 @@ function LoadFileSvc (scope, elem, posturl, files, thumbnailCB) {
     // everything looks OK let's Post it
     xmlReq.open("POST", posturl , true);
     xmlReq.send(xform);
-};
+}
 
 angular.module('UploadFiles',['ConfigApp', 'ModalNotification', 'RangeSlider'])
 
@@ -148,11 +145,11 @@ angular.module('UploadFiles',['ConfigApp', 'ModalNotification', 'RangeSlider'])
         scope.UpLoadFile=function (files) {
             var readerCB = function (upload) {
                 // scope.thumbnail = upload.target.result;
-                scope.imgElem[0].src = window.URL.createObjectURL(new Blob([upload.target.result], {type: "image"}));
-                scope.$apply('thumbnail');    // we short-circuit Angular resync image
+                scope.imgElem[0].src = window.URL.createObjectURL(new Blob([upload.target.result], {type: "image"}));                
+                return true; // true activates post
             };
             var posturl = attrs.posturl + "?token=" + ConfigApp.session.token;
-            LoadFileSvc (scope, elem, posturl, files, readerCB);
+            new LoadFileSvc (scope, elem, posturl, files, readerCB);
         };
 
         // Initiallize default values from attributes values
@@ -204,7 +201,7 @@ angular.module('UploadFiles',['ConfigApp', 'ModalNotification', 'RangeSlider'])
         // Upload is delegated to a shared function
         scope.UpLoadFile=function (files) {
             var posturl = attrs.posturl + "?token=" + ConfigApp.session.token;
-            LoadFileSvc (scope, elem, posturl, files, false);
+            new LoadFileSvc (scope, elem, posturl, files, false);
         };
 
         // Initiallize default values from attributes values
@@ -265,15 +262,14 @@ angular.module('UploadFiles',['ConfigApp', 'ModalNotification', 'RangeSlider'])
                 if (!thumbnail) {
                     console.log ("This is not a valid Application Framework APP");
                     scope.thumbnail=ConfigApp.paths[scope.category] + 'isnotvalid.png';
-                    scope.$apply('thumbnail');    // we short-circuit Angular resync image
-                    return;
+                    scope.$apply('thumbnail'); // we short-circuit Angular resync Image
+                    return false; // do not post zip on binder
                 } 
-                scope.imgElem[0].src = window.URL.createObjectURL(new Blob([thumbnail.asArrayBuffer()], {type: "image"}));
-                scope.$apply('thumbnail');    // we short-circuit Angular resync image
+                scope.imgElem[0].src = window.URL.createObjectURL(new Blob([thumbnail.asArrayBuffer()], {type: "image"}));                        
+                return true; // true activates post
             };
-                        
             var posturl = attrs.posturl + "?token=" + ConfigApp.session.token;
-            LoadFileSvc (scope, elem, posturl, files, readerCB);
+            new LoadFileSvc (scope, elem, posturl, files, readerCB);
         };
 
         // Initiallize default values from attributes values
