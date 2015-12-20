@@ -14,20 +14,36 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * References: https://github.com/expressjs/multer
  */
 
 var fs = require('fs');
 var multer = require('multer');
  
 function NewApi(handle, prefix) {
-    var self=this;
-    handle.trace (this,1, "Mock PostApi url=%s", prefix +'/ping');
-    var upload = multer({ dest: '/tmp/uploads/' });
+    var scope=this; // make sure not to loose object context in async callback
     
-    handle.app.post(prefix +'/upload', upload.single('avatar'), function (req, res) {
-        handle.trace (self, 1, "%s/upload file=", prefix, req.file.originalname);
-        var upload = multer({ dest: '/tmp/uploads/' });
+    // defined upload directory and check it's a valid one
+    var upload = multer({ dest: handle.config.UPLOAD_DIR});
+    // WARNING: single('avatar') should match with <upload-image name="avatar">
+    handle.app.post(prefix +'/upload-image', upload.single('avatar'), function (req, res) {
         
+        handle.trace (scope, 1, "%s/upload file=%s dest=%s/%s", prefix, req.file.originalname, req.file.destination, req.file.filename);
+        res.send({"jtype": "TEST_message", "status": "success", "info": "done"});
+    });
+    
+    // WARNING: single('music') should match with <upload-audio name="music">
+    handle.app.post(prefix +'/upload-music', upload.single('music'), function (req, res) {
+        
+        handle.trace (scope, 1, "%s/upload file=%s dest=%s/%s", prefix, req.file.originalname, req.file.destination, req.file.filename);
+        res.send({"jtype": "TEST_message", "status": "success", "info": "done"});
+    });
+    
+    // WARNING: single('appli') should match with <upload-audio name="appli">
+    handle.app.post(prefix +'/upload-appli', upload.single('appli'), function (req, res) {
+        
+        handle.trace (scope, 1, "%s/upload file=%s dest=%s/%s", prefix, req.file.originalname, req.file.destination, req.file.filename);
         res.send({"jtype": "TEST_message", "status": "success", "info": "done"});
     });
     

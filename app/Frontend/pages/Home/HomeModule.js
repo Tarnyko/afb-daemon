@@ -29,10 +29,10 @@ angular.module('HomeModule', ['SubmitButton', 'TokenRefresh'])
 
             // Make sure we clean everything when Open/Close is called
             if (apiname === "APIcreate" || apiname === "APIreset") {
-                scope["APIreset"]='';
-                scope["APIcreate"]='';
-                scope["APIrefresh"]='';
-                scope["APIcheck"]='';
+                scope.APIreset  ='';
+                scope.APIcreate ='';
+                scope.APIrefresh='';
+                scope.APIcheck  ='';
             }
             scope[apiname]="success";
             

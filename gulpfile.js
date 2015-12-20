@@ -112,7 +112,7 @@ pipes.validatedDevServerScripts = function() {
 pipes.validatedPartials = function() {
     return gulp.src(paths.partials)
         .pipe(plugins.htmlhint({'doctype-first': false}))
-        .pipe(router({path: paths.application+'/tmp/routes.js', root: paths.application}))
+        .pipe(router({path: paths.application+'/etc/routes.js', root: paths.application}))
         .pipe(plugins.htmlhint.reporter());
 };
 

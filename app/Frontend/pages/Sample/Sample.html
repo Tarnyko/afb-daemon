@@ -1,5 +1,4 @@
-<!-- comment -->
-
+<!-- Foundation Annotations generate tmp/route.js -->
 ---
 name: mysample
 url:  /sample
@@ -8,16 +7,28 @@ animationIn: slideInRight
 ---
 
 <h1><img class="logo" src="images/logo/triskel_iot_bzhx250.png" alt="IoT.bzh Logo" style="height:150px;">
-    Not Working
+    Post File Upload
 </h1>
 
 <div class="sample-box box-content">
     
-    <upload-file name="avatar" category="avatars" icon="tux-visitor.png"></upload-file>
+    <!-- Usage: upload-xxxxx
+         name     = [xxxxxx] is use a field label for xform input field. Should match with server side
+         category = [avatar] should match to a valid directory of thumbnail within AppConfig.path
+         thumbnail= [tux-bzh.png] a valid image within AppConfig.paths.[category]
+         istoobig = [istoobig.png] used image from AppConfig.paths.[category] when file is oversized
+         maxsize  = [xxx] maximum size in KB [default max depend on upload-type]
+         accept = [image] acceptable accept for upload
+    -->
+    <upload-image name="avatar" category="avatar" thumbnail="tux-visitor.png" maxsize="100" 
+        posturl="/api/post/upload-image" callback="ctrl.FileUploaded" accept="image">
+    </upload-image>
     
-    <submit-button class="sample-button"  icon="fi-zoom-in" label="Vol+"   clicked="ctrl.MuteOn" ></submit-button>
-    <submit-button class="sample-button" icon="fi-zoom-out" label="Vol-" clicked="ctrl.MuteOff" ></submit-button>
-    <submit-button class="home-button"  icon="fi-upload" label="Refresh"   clicked="ctrl.UploadFile" ></submit-button>
+    <!-- Warning: name=xxx should match with what server expect [used as xform input name -->
+    <upload-audio  name=music posturl="/api/post/upload-music" callback="ctrl.FileUploaded"></upload-audio>
+
+    <!-- Warning: name=xxx should match with what server expect [used as xform input name -->
+    <upload-appli  name=appli posturl="/api/post/upload-appli" callback="ctrl.FileUploaded"></upload-appli>
 
 </div>
 

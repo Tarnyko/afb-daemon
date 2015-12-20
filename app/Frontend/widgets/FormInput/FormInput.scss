@@ -7,11 +7,33 @@
 
 @import "app/ibz-mixins";
 
-upload-file {
-    height: 5rem;
+.upload-file {
     display: inline-block;
     float: right;
+    height : 5rem;
+    width  : 5rem;
+    margin: 0.5rem;
+
     img { height: inherit;}
+    
+    .ibz-range-slider {
+        height: 10% !important;
+        border-radius: 5px;
+        background-color: lightgrey !important;
+    
+        .range-slider-handle {
+            width: 10% !important;
+            height: 100% !important;
+            margin-top: .2rem;
+            background-color: purple !important;
+        }
+
+        .range-slider-active-segment {
+            height: 80% !important;
+            background-color: lightgreen;
+        }
+    }
+
 }
 
 input-text {

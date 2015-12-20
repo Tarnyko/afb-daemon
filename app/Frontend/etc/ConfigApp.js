@@ -5,13 +5,16 @@
     angular.module('ConfigApp', [])
 
             // Factory is a singleton and share its context within all instances.
-            .factory('ConfigApp', function () {
+            .factory('ConfigApp', function ($location, $window) {
 
+                // console.log ("URL="+ $location.url() + " Query=" + location.href+ " window=" + document.referrer);
 
                 var myConfig = {
                     paths: { // Warning paths should end with /
-                        images : 'images/',
-                        avatars: 'images/avatars/'
+                        image : 'images/',
+                        avatar: 'images/avatars/',
+                        audio : 'images/audio/',
+                        appli : 'images/appli/'
                     },
                     
                     api: { // Warning paths should end with /

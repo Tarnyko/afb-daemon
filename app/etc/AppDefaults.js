@@ -29,6 +29,8 @@ config = {
     DEBUG   : 4001,          // Node Debug Port
     DBG_LVL : 5,             // Debug Trace Level 0=no trace.
     
+    UPLOAD_DIR: '/tmp/uploads',  // directory destination for uploaded files [/api/post/upload]
+    
     // EXPRESS WEB server config [note: URLBASE generate rewriting rules]
     EXPRESS_HOST    : 'localhost',         // HTTP will only listen on related Internet interface
     EXPRESS_PORT    : 4000,                // HTTP port

@@ -32,7 +32,7 @@
 
 
 // scope module is load statically before any route is cativated
-angular.module('TokenRefresh', [])
+angular.module('TokenRefresh', ['ConfigApp', 'ModalNotification'])
 
     .directive ('tokenRefresh', function($timeout, $http, $location, Notification, ConfigApp) {
 

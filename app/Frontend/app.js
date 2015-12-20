@@ -18,9 +18,10 @@
     'JQueryEmu',
     'HomeModule',
     'SampleModule',
-    'UploadFile',
+    'UploadFiles',
     'LinkButton',
     'TokenRefresh',
+    'RangeSlider',
     'ModalNotification'
   ])
     .config(config)
@@ -28,8 +29,10 @@
   ;
 
   config.$inject = ['$urlRouterProvider', '$locationProvider'];
+  
+  console.log ("***location=" + window.location + " search" + window.search)
 
-  function config($urlProvider, $locationProvider) {
+  function config($urlProvider, $locationProvider, ConfigApp) {
     $urlProvider.otherwise('/home');
 
     // https://docs.angularjs.org/error/$location/nobase
@@ -41,5 +44,5 @@
     FastClick.attach(document.body);
   }
 
-console.log ("@@APPNAME@@ Loaded");
+console.log ("opa=@@APPNAME@@ Loaded");
 })();
