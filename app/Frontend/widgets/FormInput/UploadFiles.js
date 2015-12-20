@@ -21,6 +21,7 @@
  *   https://github.com/nervgh/angular-file-upload/blob/master/src/services/FileUploader.js
  *   https://stuk.github.io/jszip/documentation/howto/read_zip.html
  *   http://onehungrymind.com/zip-parsing-jszip-angular/
+ *   http://stackoverflow.com/questions/15341912/how-to-go-from-blob-to-arraybuffer
  */
 
    
