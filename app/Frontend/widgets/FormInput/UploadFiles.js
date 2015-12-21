@@ -43,8 +43,12 @@ var tmpl =  '<input type="file" name="{{name}}-input" onchange="angular.element(
 function LoadFileSvc (scope, elem, posturl, files, thumbnailCB) {
     var xmlReq = new XMLHttpRequest();
     var xform  = new FormData();
-
-    // Update slider during Upload
+    
+    var OnLoadCB = function (target) {
+        var status = thumbnailCB (target);
+        //if (status) xform.append(scope.name, file, file.name);
+    };
+            // Update slider during Upload
     xmlReq.upload.onprogress = function (event) {
         var progress = Math.round(event.lengthComputable ? event.loaded * 100 / event.total : 0);
         if (scope.slider) scope.slider.setValue (progress);
@@ -110,10 +114,7 @@ function LoadFileSvc (scope, elem, posturl, files, thumbnailCB) {
         if (thumbnailCB) {
             var reader = new FileReader();
             reader.readAsArrayBuffer(file);
-            reader.onload = function (target) {
-                var status = thumbnailCB (target);
-                //if (status) xform.append(scope.name, file, file.name);
-            };
+            reader.onload = OnLoadCB;
         } 
         // if everything is OK let's add file to xform
         xform.append(scope.name, file, file.name);
