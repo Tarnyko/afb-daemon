@@ -53,6 +53,7 @@ function LoadFileSvc (scope, elem, posturl, files, thumbnailCB) {
     // Upload is finish let's notify controler callback
     xmlReq.onload = function () {
         elem.addClass ("success");
+        elem.removeClass ("error");
         var response ={
             status : xmlReq.status,
             headers: xmlReq.getAllResponseHeaders() 
@@ -61,7 +62,8 @@ function LoadFileSvc (scope, elem, posturl, files, thumbnailCB) {
     };
 
     xmlReq.onerror = function () {
-        elem.addClass ("error fail");
+        elem.addClass ("error");
+        elem.removeClass ("success");
         var response ={
             status : xmlReq.status,
             headers: xmlReq.getAllResponseHeaders() 
@@ -70,7 +72,8 @@ function LoadFileSvc (scope, elem, posturl, files, thumbnailCB) {
     };
 
     xmlReq.onabort = function () {
-        elem.addClass ("error abort");
+        elem.addClass ("error");
+        elem.removeClass ("success");
         var response ={
             status : xmlReq.status,
             headers: xmlReq.getAllResponseHeaders() 
