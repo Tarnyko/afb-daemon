@@ -37,8 +37,8 @@ angular.module('TokenRefresh', ['ConfigApp', 'ModalNotification'])
     .directive ('tokenRefresh', function($timeout, $http, $location, Notification, ConfigApp) {
 
     function mymethods(scope, elem, attrs) {
+        scope.status=undefined; // neither thu neither false
         
-        scope.status=false;
     
         scope.online = function () {
             elem.addClass    ("online");
@@ -49,26 +49,35 @@ angular.module('TokenRefresh', ['ConfigApp', 'ModalNotification'])
             elem.addClass    ("offline");
             elem.removeClass ("online");
         };
+        
+        scope.onerror = function(data, errcode, headers) {
+            if (scope.status !== false)  {
+                Notification.warning ({message: "AppFramework Binder Lost", delay: 5000});
+                scope.offline();
+            }
+            scope.status = 0;
+        };
+        
+        scope.onsuccess = function(data, errcode, headers, config) {
+            if (scope.status !== true)  {
+                if (data.request.token) ConfigApp.session.token = data.request.token;
+                if (data.request.uuid)  ConfigApp.session.uuid  = data.request.uuid;
+                if (data.request.timeout)  ConfigApp.session.timeout  = data.request.timeout;
+
+                Notification.success ({message: "AppFramework Binder Back to Live", delay: 3000});
+                scope.online();
+            }
+            scope.status = 1;
+        };
 
         // Check Binder status
         scope.getping = function() {
 
             var handler = $http.post(ConfigApp.session.ping+'?token='+ ConfigApp.session.token);
-            handler.success(function(response, errcode, headers, config) {
-                if (!scope.status)  {
-                    Notification.success ({message: "AppFramework Binder Back to Live", delay: 3000});
-                    scope.online();
-                }
-                scope.status = 1;
-            });
-
-            handler.error(function(response, errcode, headers) {
-                if (scope.status)  {
-                    Notification.warning ({message: "AppFramework Binder Lost", delay: 5000});
-                    scope.offline();
-                }
-                scope.status = 0;
-            });
+            
+            // process success and error
+            handler.success(scope.onsuccess);
+            handler.error(scope.onerror);
 
             // restart a new timer for next ping
             $timeout (scope.getping, ConfigApp.session.pingrate*1000);
@@ -77,15 +86,33 @@ angular.module('TokenRefresh', ['ConfigApp', 'ModalNotification'])
         // Check Binder status
         scope.refresh = function() {
             var handler = $http.post(ConfigApp.session.refresh+'?token='+ ConfigApp.session.token);
+            
+            // process success and error
+            handler.success(scope.onsuccess);
+            handler.error(scope.onerror);
+            // restart a new timer for next refresh to 1/4 of timeout session
             $timeout (scope.refresh, ConfigApp.session.timeout *250);
+        };
+        
+        // Initial connection
+        scope.tkcreate = function() {
+            var handler = $http.post(ConfigApp.session.create+'?token='+ ConfigApp.session.initial);
+            
+            // process success and error
+            handler.success(scope.onsuccess);
+            handler.error(scope.onerror);
         };
  
         scope.icon      = attrs.icon   || "fi-lightbulb";
         scope.hostname  = $location.host();
         scope.httpdport = $location.port();
+        scope.autolog   = JSON.parse(attrs.autolog || false);
         
-        scope.getping();
-        scope.refresh();
+        if (scope.autolog) scope.tkcreate();
+
+        // Init ping and refresh process
+        $timeout (scope.getping, ConfigApp.session.pingrate*1000);
+        $timeout (scope.refresh, ConfigApp.session.timeout *250);
     }
 
     return {

@@ -56,7 +56,7 @@ angular.module('HomeModule', ['SubmitButton', 'TokenRefresh'])
         scope.OpenSession = function() {
             console.log ("OpenSession"); 
             var postdata= {/* any json your application may need */};
-            var handler = $http.post(ConfigApp.api.token + 'create?token='+ConfigApp.session.initial, postdata);
+            var handler = $http.post(ConfigApp.session.create + '?token='+ConfigApp.session.initial, postdata);
             
             handler.success(scope.ProcessResponse);
             handler.error(scope.ProcessError);
@@ -65,7 +65,7 @@ angular.module('HomeModule', ['SubmitButton', 'TokenRefresh'])
         scope.CheckSession = function() {
             console.log ("CloseSession");
             var postdata= {/* any json your application may need */};
-            var handler = $http.post(ConfigApp.api.token + 'check?token='+scope.token, postdata);
+            var handler = $http.post(ConfigApp.session.check + '?token='+ConfigApp.session.token, postdata);
             
             handler.success(scope.ProcessResponse);
             handler.error(scope.ProcessError);
@@ -74,7 +74,7 @@ angular.module('HomeModule', ['SubmitButton', 'TokenRefresh'])
         scope.RefreshSession = function() {
             console.log ("RefreshSession");
             var postdata= {/* any json your application may need */};
-            var handler = $http.post(ConfigApp.api.token + 'refresh?token='+scope.token, postdata);
+            var handler = $http.post(ConfigApp.session.refresh + '?token='+ConfigApp.session.token, postdata);
             
             handler.success(scope.ProcessResponse);
             handler.error(scope.ProcessError);
@@ -83,7 +83,7 @@ angular.module('HomeModule', ['SubmitButton', 'TokenRefresh'])
         scope.ResetSession = function() {
             console.log ("ResetSession");
             var postdata= {/* any json your application may need */};
-            var handler = $http.post(ConfigApp.api.token + 'reset?token='+scope.token, postdata);
+            var handler = $http.post(ConfigApp.session.reset + '?token='+ConfigApp.session.token, postdata);
             
             handler.success(scope.ProcessResponse);
             handler.error(scope.ProcessError);

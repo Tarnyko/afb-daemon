@@ -17,12 +17,15 @@
                         appli : 'images/appli/'
                     },
                     
-                    api: { // Warning paths should end with /
-                       token : '/api/token/'
+                    myapi: { // Warning paths should end with /
+                       token : '/api/myplugin/xxxx'
                     },
                     
                     session: { // Those data are updated by session service
+                       create  : '/api/token/create',
                        refresh : '/api/token/refresh',
+                       check   : '/api/token/check',
+                       reset   : '/api/token/reset',
                        ping    : '/api/token/check',
                        initial : '123456789',  // typical dev initial token
                        timeout : 3600,         // timeout is updated client sessin context creation
