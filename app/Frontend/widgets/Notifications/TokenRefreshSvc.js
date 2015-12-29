@@ -73,7 +73,7 @@ angular.module('TokenRefresh', ['ConfigApp', 'ModalNotification'])
         // Check Binder status
         scope.getping = function() {
 
-            var handler = $http.post(ConfigApp.session.ping+'?token='+ ConfigApp.session.token);
+            var handler = $http.get(ConfigApp.session.ping+'?token='+ ConfigApp.session.token);
             
             // process success and error
             handler.success(scope.onsuccess);
@@ -85,7 +85,7 @@ angular.module('TokenRefresh', ['ConfigApp', 'ModalNotification'])
         
         // Check Binder status
         scope.refresh = function() {
-            var handler = $http.post(ConfigApp.session.refresh+'?token='+ ConfigApp.session.token);
+            var handler = $http.get(ConfigApp.session.refresh+'?token='+ ConfigApp.session.token);
             
             // process success and error
             handler.success(scope.onsuccess);
@@ -96,7 +96,7 @@ angular.module('TokenRefresh', ['ConfigApp', 'ModalNotification'])
         
         // Initial connection
         scope.tkcreate = function() {
-            var handler = $http.post(ConfigApp.session.create+'?token='+ ConfigApp.session.initial);
+            var handler = $http.get(ConfigApp.session.create+'?token='+ ConfigApp.session.initial);
             
             // process success and error
             handler.success(scope.onsuccess);

@@ -30,7 +30,7 @@
 
   config.$inject = ['$urlRouterProvider', '$locationProvider'];
   
-  console.log ("***location=" + window.location + " search" + window.search)
+  console.log ("***location=" + window.location + " search" + window.search);
 
   function config($urlProvider, $locationProvider, ConfigApp) {
     $urlProvider.otherwise('/home');
