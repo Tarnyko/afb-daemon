@@ -1,3 +1,8 @@
+### Sample client application for Application Framework Binder
+
+![AFB-Client screenshot](http://iot.bzh/images/afb-client.jpg)
+
+_(Application Framework Binder can be found on https://github.com/iotbzh/afb-daemon)_
 
 ## Installation
 
@@ -57,8 +62,11 @@ Install HTML5 development toolchain on your host
 ### Move to Target
     cd $MYWORKSPACE/afb-client
     gulp build-app-prod
-    scp -r ./dist.pro/* user@mytarget:/rootdir/apfDaemon
+    scp -r ./dist.prod/* user@mytarget:/rootdir/afb-client
+    ssh user@mytarget "afb-daemon --port=3001 --token='' --rootdir=/rootdir/afb-client"
+    http://mytarget:3001/opa
 
+### Directory structure
     /AppClient
     |
     |---- package.json
@@ -95,4 +103,3 @@ Install HTML5 development toolchain on your host
     |---- (/dist.dev)
     |---- (/dist.prod)
 
-    
