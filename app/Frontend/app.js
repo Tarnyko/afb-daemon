@@ -1,13 +1,13 @@
 (function() {
   'use strict';
   
-  function ParseQueryString () {
+  function  ParseQueryString () {
       var qd = {};
       location.search.substr(1).split("&").forEach(function(item) {
           var k = item.split("=")[0], v = decodeURIComponent(item.split("=")[1]); (k in qd) ? qd[k].push(v) : qd[k] = [v];
       });
       return qd;
-  }
+  };
 
   angular.module('@@APPNAME@@', [ // Warning: Appname should fit with gulpfile.js & index.html
     'ui.router',
