@@ -24,7 +24,7 @@
     var tmpl = '<div  ng-click="clicked()"> <span>' +
             '<i class="{{icon}}"></i>' +
             '<span>{{label}}</span>' +
-            '</span></div>';
+            '</div>';
 
     angular.module('SubmitButton', [])
             .directive('submitButton', function () {
