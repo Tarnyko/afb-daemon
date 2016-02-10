@@ -1,7 +1,7 @@
 #bower_components/
 node_modules/
 dist.dev/
-#dist.prod/
+dist.prod/sessions
 *.DS_Store
 nbproject/private/
 .noderc*
