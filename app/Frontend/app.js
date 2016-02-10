@@ -6,7 +6,7 @@
       location.search.substr(1).split("&").forEach(function(item) {
           var k = item.split("=")[0];
           var v = decodeURIComponent(item.split("=")[1]); 
-          (k in qd) ? qd[k].push(v) : qd[k] = [v];
+          if (k in qd) qd[k].push(v); else qd[k] = [v];
       });
       return qd;
   }
