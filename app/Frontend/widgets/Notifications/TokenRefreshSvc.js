@@ -32,26 +32,27 @@
 
 
 // scope module is load statically before any route is cativated
-angular.module('TokenRefresh', ['ConfigApp', 'ModalNotification'])
+angular.module('TokenRefresh', ['AppConfig', 'ModalNotification'])
 
-    .directive ('tokenRefresh', function($timeout, $http, $location, Notification, ConfigApp) {
+    .directive ('tokenRefresh', function($timeout, $http, $location, Notification, AppConfig) {
 
     function mymethods(scope, elem, attrs) {
-        scope.status=undefined; // neither thu neither false
-        
-    
+        scope.logged=undefined; // neither thu neither false
+         
         scope.online = function () {
             elem.addClass    ("online");
             elem.removeClass ("offline");
+            scope.logged=true;
         };
 
         scope.offline = function(){
             elem.addClass    ("offline");
             elem.removeClass ("online");
+            scope.logged=false;
         };
         
         scope.onerror = function(data, errcode, headers) {
-            if (scope.status !== false)  {
+            if (scope.logged !== false)  {
                 Notification.warning ({message: "AppFramework Binder Lost", delay: 5000});
                 scope.offline();
             }
@@ -59,13 +60,13 @@ angular.module('TokenRefresh', ['ConfigApp', 'ModalNotification'])
         };
         
         scope.onsuccess = function(data, errcode, headers, config) {
-            if (scope.status !== true)  {
-                if (data.request.token) ConfigApp.session.token = data.request.token;
-                if (data.request.uuid)  ConfigApp.session.uuid  = data.request.uuid;
-                if (data.request.timeout)  ConfigApp.session.timeout  = data.request.timeout;
-
+            if (data.request.token) AppConfig.session.token = data.request.token;
+            if (data.request.uuid)  AppConfig.session.uuid  = data.request.uuid;
+            if (data.request.timeout)  AppConfig.session.timeout  = data.request.timeout;
+            if (scope.logged !== true)  {
                 Notification.success ({message: "AppFramework Binder Back to Live", delay: 3000});
                 scope.online();
+                if (scope.callback) scope.callback();
             }
             scope.status = 1;
         };
@@ -73,30 +74,30 @@ angular.module('TokenRefresh', ['ConfigApp', 'ModalNotification'])
         // Check Binder status
         scope.getping = function() {
 
-            var handler = $http.get(ConfigApp.session.ping+'?token='+ ConfigApp.session.token);
+            var handler = $http.get(AppConfig.session.ping+'?token='+ AppConfig.session.token);
             
             // process success and error
             handler.success(scope.onsuccess);
             handler.error(scope.onerror);
 
             // restart a new timer for next ping
-            $timeout (scope.getping, ConfigApp.session.pingrate*1000);
+            $timeout (scope.getping, AppConfig.session.pingrate*1000);
         };
         
         // Check Binder status
         scope.refresh = function() {
-            var handler = $http.get(ConfigApp.session.refresh+'?token='+ ConfigApp.session.token);
+            var handler = $http.get(AppConfig.session.refresh+'?token='+ AppConfig.session.token);
             
             // process success and error
             handler.success(scope.onsuccess);
             handler.error(scope.onerror);
             // restart a new timer for next refresh to 1/4 of timeout session
-            $timeout (scope.refresh, ConfigApp.session.timeout *250);
+            $timeout (scope.refresh, AppConfig.session.timeout *250);
         };
         
         // Initial connection
         scope.tkcreate = function() {
-            var handler = $http.get(ConfigApp.session.create+'?token='+ ConfigApp.session.initial);
+            var handler = $http.get(AppConfig.session.create+'?token='+ AppConfig.session.initial);
             
             // process success and error
             handler.success(scope.onsuccess);
@@ -111,8 +112,8 @@ angular.module('TokenRefresh', ['ConfigApp', 'ModalNotification'])
         if (scope.autolog) scope.tkcreate();
 
         // Init ping and refresh process
-        $timeout (scope.getping, ConfigApp.session.pingrate*1000);
-        $timeout (scope.refresh, ConfigApp.session.timeout *250);
+        $timeout (scope.getping, AppConfig.session.pingrate*1000);
+        $timeout (scope.refresh, AppConfig.session.timeout *250);
     }
 
     return {
