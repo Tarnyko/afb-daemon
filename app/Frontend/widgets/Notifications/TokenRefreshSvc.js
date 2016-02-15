@@ -34,11 +34,17 @@
 // scope module is load statically before any route is cativated
 angular.module('TokenRefresh', ['AppConfig', 'ModalNotification'])
 
-    .directive ('tokenRefresh', function($timeout, $http, $location, Notification, AppConfig) {
+    .directive ('tokenRefresh', function($window, $timeout, $location, Notification, AppConfig, AppCall) {
 
     function mymethods(scope, elem, attrs) {
         scope.logged=undefined; // neither thu neither false
-         
+        
+        $window.onbeforeunload = function () {
+            AppCall.get ("token", "reset", {/*query*/}, function () {
+            console.log("OPA Exit Requested");                
+            });
+        };
+                 
         scope.online = function () {
             elem.addClass    ("online");
             elem.removeClass ("offline");
@@ -51,7 +57,7 @@ angular.module('TokenRefresh', ['AppConfig', 'ModalNotification'])
             scope.logged=false;
         };
         
-        scope.onerror = function(data, errcode, headers) {
+        scope.onerror = function() {
             if (scope.logged !== false)  {
                 Notification.warning ({message: "AppFramework Binder Lost", delay: 5000});
                 scope.offline();
@@ -59,49 +65,48 @@ angular.module('TokenRefresh', ['AppConfig', 'ModalNotification'])
             scope.status = 0;
         };
         
-        scope.onsuccess = function(data, errcode, headers, config) {
-            if (data.request.token) AppConfig.session.token = data.request.token;
-            if (data.request.uuid)  AppConfig.session.uuid  = data.request.uuid;
-            if (data.request.timeout)  AppConfig.session.timeout  = data.request.timeout;
+        scope.onsuccess = function(jresp) {
+            if (jresp.request.token) AppConfig.session.token = jresp.request.token;
+            if (jresp.request.uuid)  AppConfig.session.uuid  = jresp.request.uuid;
+            if (jresp.request.timeout)  AppConfig.session.timeout  = jresp.request.timeout;
+            
             if (scope.logged !== true)  {
                 Notification.success ({message: "AppFramework Binder Back to Live", delay: 3000});
                 scope.online();
-                if (scope.callback) scope.callback();
+                if (scope.callback) scope.callback(jresp);
             }
             scope.status = 1;
         };
 
         // Check Binder status
         scope.getping = function() {
-
-            var handler = $http.get(AppConfig.session.ping+'?token='+ AppConfig.session.token);
             
-            // process success and error
-            handler.success(scope.onsuccess);
-            handler.error(scope.onerror);
-
-            // restart a new timer for next ping
-            $timeout (scope.getping, AppConfig.session.pingrate*1000);
+            AppCall.get ("token", "ping", {/*query*/},function(result) {
+                if (result.status === 200) scope.onsuccess (result.data);
+                else  scope.onerror();
+                // restart a new timer for next ping
+                $timeout (scope.getping, AppConfig.session.pingrate*1000);
+            });
         };
         
         // Check Binder status
         scope.refresh = function() {
-            var handler = $http.get(AppConfig.session.refresh+'?token='+ AppConfig.session.token);
             
-            // process success and error
-            handler.success(scope.onsuccess);
-            handler.error(scope.onerror);
-            // restart a new timer for next refresh to 1/4 of timeout session
-            $timeout (scope.refresh, AppConfig.session.timeout *250);
+            AppCall.get ("token", "refresh", {/*query*/},function(result) {
+                if (result.status === 200) scope.onsuccess (result.data);
+                else  scope.onerror();
+                // restart a new timer for next refresh
+                $timeout (scope.refresh, AppConfig.session.timeout *250);
+            });            
         };
         
         // Initial connection
         scope.tkcreate = function() {
-            var handler = $http.get(AppConfig.session.create+'?token='+ AppConfig.session.initial);
             
-            // process success and error
-            handler.success(scope.onsuccess);
-            handler.error(scope.onerror);
+            AppCall.get ("token", "create", {token: AppConfig.session.initial},function(result) {
+                if (result.status === 200) scope.onsuccess (result.data);
+                else  scope.onerror();
+            });                        
         };
  
         scope.icon      = attrs.icon   || "fi-lightbulb";
