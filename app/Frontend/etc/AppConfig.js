@@ -2,10 +2,10 @@
     'use strict';
 
     // _all modules only reference dependencies
-    angular.module('ConfigApp', [])
+    angular.module('AppConfig', [])
 
             // Factory is a singleton and share its context within all instances.
-            .factory('ConfigApp', function (urlquery) {
+            .factory('AppConfig', function (urlquery) {
 
                 var myConfig = {
                     paths: { // Warning paths should end with /
@@ -14,11 +14,7 @@
                         audio : 'images/audio/',
                         appli : 'images/appli/'
                     },
-                    
-                    myapi: { // Warning paths should end with /
-                       token : '/api/myplugin/xxxx'
-                    },
-                    
+                                        
                     session: { // Those data are updated by session service
                        create  : '/api/token/create',
                        refresh : '/api/token/refresh',
@@ -34,6 +30,19 @@
                 };
 
                 return myConfig;
+            })
+            
+            // Factory is a singleton and share its context within all instances.
+            .factory('AppCall', function ($http, AppConfig) {
+                var myCalls = {
+                    get : function(plugin, action, query, callback) {
+                        if (!query.token) query.token = AppConfig.session.token; // add token to provided query                        
+                        $http.get('/api/' + plugin + '/' + action , {params: query}).then (callback, callback);
+                    }
+
+                };
+                return myCalls;
             });
+    
 
 })();

@@ -126,9 +126,9 @@ function LoadFileSvc (scope, elem, posturl, files, thumbnailCB) {
     xmlReq.send(xform);
 }
 
-angular.module('UploadFiles',['ConfigApp', 'ModalNotification', 'RangeSlider'])
+angular.module('UploadFiles',['AppConfig', 'ModalNotification', 'RangeSlider'])
 
-.directive('uploadImage', function(ConfigApp,  JQemu, Notification) {
+.directive('uploadImage', function(AppConfig,  JQemu, Notification) {
     function mymethods(scope, elem, attrs) {
         
         // get widget image handle from template
@@ -152,7 +152,7 @@ angular.module('UploadFiles',['ConfigApp', 'ModalNotification', 'RangeSlider'])
                 scope.imgElem[0].src = window.URL.createObjectURL(new Blob([upload.target.result], {type: "image"}));                
                 return true; // true activates post
             };
-            var posturl = attrs.posturl + "?token=" + ConfigApp.session.token;
+            var posturl = attrs.posturl + "?token=" + AppConfig.session.token;
             new LoadFileSvc (scope, elem, posturl, files, readerCB);
         };
 
@@ -163,14 +163,14 @@ angular.module('UploadFiles',['ConfigApp', 'ModalNotification', 'RangeSlider'])
         scope.maxsize= attrs.maxsize || 100; // default max size 100KB
         scope.regexp = new RegExp (attrs.accept+ '.*','i');
 
-        if (attrs.thumbnail) scope.thumbnail= ConfigApp.paths[scope.category] +  attrs.thumbnail;
-        else  scope.thumbnail=ConfigApp.paths[scope.category] + 'tux-bzh.png';
+        if (attrs.thumbnail) scope.thumbnail= AppConfig.paths[scope.category] +  attrs.thumbnail;
+        else  scope.thumbnail=AppConfig.paths[scope.category] + 'tux-bzh.png';
         
-        if (attrs.thumbnail) scope.isnotvalid= ConfigApp.paths[scope.category] +  attrs.isnotvalid;
-        else  scope.isnotvalid=ConfigApp.paths[scope.category] + 'isnotvalid.png';
+        if (attrs.thumbnail) scope.isnotvalid= AppConfig.paths[scope.category] +  attrs.isnotvalid;
+        else  scope.isnotvalid=AppConfig.paths[scope.category] + 'isnotvalid.png';
 
-        if (attrs.istoobig) scope.istoobig= ConfigApp.paths[scope.category] +  attrs.istoobig;
-        else  scope.istoobig=ConfigApp.paths[scope.category] + 'istoobig.png';
+        if (attrs.istoobig) scope.istoobig= AppConfig.paths[scope.category] +  attrs.istoobig;
+        else  scope.istoobig=AppConfig.paths[scope.category] + 'istoobig.png';
         scope.noslider = attrs.noslider || false;
 
         if (!attrs.posturl) throw new TypeError('file-upload %s posturl=/api/xxxx/xxxx required', scope.attrs);            
@@ -185,7 +185,7 @@ angular.module('UploadFiles',['ConfigApp', 'ModalNotification', 'RangeSlider'])
     };
 })
     
-.directive('uploadAudio', function(ConfigApp,  JQemu, Notification) {
+.directive('uploadAudio', function(AppConfig,  JQemu, Notification) {
     function mymethods(scope, elem, attrs) {
         
         // get widget image handle from template
@@ -204,7 +204,7 @@ angular.module('UploadFiles',['ConfigApp', 'ModalNotification', 'RangeSlider'])
         
         // Upload is delegated to a shared function
         scope.UpLoadFile=function (files) {
-            var posturl = attrs.posturl + "?token=" + ConfigApp.session.token;
+            var posturl = attrs.posturl + "?token=" + AppConfig.session.token;
             new LoadFileSvc (scope, elem, posturl, files, false);
         };
 
@@ -215,14 +215,14 @@ angular.module('UploadFiles',['ConfigApp', 'ModalNotification', 'RangeSlider'])
         scope.maxsize= attrs.maxsize || 10000; // default max size 10MB
         scope.regexp = new RegExp (attrs.accept+ '.*','i');
 
-        if (attrs.thumbnail) scope.thumbnail= ConfigApp.paths[scope.category] +  attrs.thumbnail;
-        else  scope.thumbnail=ConfigApp.paths[scope.category] + 'upload-music.png';
+        if (attrs.thumbnail) scope.thumbnail= AppConfig.paths[scope.category] +  attrs.thumbnail;
+        else  scope.thumbnail=AppConfig.paths[scope.category] + 'upload-music.png';
         
-        if (attrs.thumbnail) scope.isnotvalid= ConfigApp.paths[scope.category] +  attrs.isnotvalid;
-        else  scope.isnotvalid=ConfigApp.paths[scope.category] + 'isnotvalid.png';
+        if (attrs.thumbnail) scope.isnotvalid= AppConfig.paths[scope.category] +  attrs.isnotvalid;
+        else  scope.isnotvalid=AppConfig.paths[scope.category] + 'isnotvalid.png';
 
-        if (attrs.istoobig) scope.istoobig= ConfigApp.paths[scope.category] +  attrs.istoobig;
-        else  scope.istoobig=ConfigApp.paths[scope.category] + 'istoobig.png';
+        if (attrs.istoobig) scope.istoobig= AppConfig.paths[scope.category] +  attrs.istoobig;
+        else  scope.istoobig=AppConfig.paths[scope.category] + 'istoobig.png';
         scope.noslider = attrs.noslider || false;
 
         if (!attrs.posturl) throw new TypeError('file-upload %s posturl=/api/xxxx/xxxx required', scope.attrs);            
@@ -238,7 +238,7 @@ angular.module('UploadFiles',['ConfigApp', 'ModalNotification', 'RangeSlider'])
     
 })
 
-.directive('uploadAppli', function(ConfigApp,  JQemu, Notification) {
+.directive('uploadAppli', function(AppConfig,  JQemu, Notification) {
     function mymethods(scope, elem, attrs) {
         
         // get widget image handle from template
@@ -265,14 +265,14 @@ angular.module('UploadFiles',['ConfigApp', 'ModalNotification', 'RangeSlider'])
                 // Check is we have a thumbnail within loaded Zipfile
                 if (!thumbnail) {
                     console.log ("This is not a valid Application Framework APP");
-                    scope.thumbnail=ConfigApp.paths[scope.category] + 'isnotvalid.png';
+                    scope.thumbnail=AppConfig.paths[scope.category] + 'isnotvalid.png';
                     scope.$apply('thumbnail'); // we short-circuit Angular resync Image
                     return false; // do not post zip on binder
                 } 
                 scope.imgElem[0].src = window.URL.createObjectURL(new Blob([thumbnail.asArrayBuffer()], {type: "image"}));                        
                 return true; // true activates post
             };
-            var posturl = attrs.posturl + "?token=" + ConfigApp.session.token;
+            var posturl = attrs.posturl + "?token=" + AppConfig.session.token;
             new LoadFileSvc (scope, elem, posturl, files, readerCB);
         };
 
@@ -283,14 +283,14 @@ angular.module('UploadFiles',['ConfigApp', 'ModalNotification', 'RangeSlider'])
         scope.maxsize= attrs.maxsize || 100000; // default max size 100MB
         scope.regexp = new RegExp (attrs.accept+ '.*','i');
 
-        if (attrs.thumbnail) scope.thumbnail= ConfigApp.paths[scope.category] +  attrs.thumbnail;
-        else  scope.thumbnail=ConfigApp.paths[scope.category] + 'upload-appli.png';
+        if (attrs.thumbnail) scope.thumbnail= AppConfig.paths[scope.category] +  attrs.thumbnail;
+        else  scope.thumbnail=AppConfig.paths[scope.category] + 'upload-appli.png';
         
-        if (attrs.thumbnail) scope.isnotvalid= ConfigApp.paths[scope.category] +  attrs.isnotvalid;
-        else  scope.isnotvalid=ConfigApp.paths[scope.category] + 'isnotvalid.png';
+        if (attrs.thumbnail) scope.isnotvalid= AppConfig.paths[scope.category] +  attrs.isnotvalid;
+        else  scope.isnotvalid=AppConfig.paths[scope.category] + 'isnotvalid.png';
 
-        if (attrs.istoobig) scope.istoobig= ConfigApp.paths[scope.category] +  attrs.istoobig;
-        else  scope.istoobig=ConfigApp.paths[scope.category] + 'istoobig.png';
+        if (attrs.istoobig) scope.istoobig= AppConfig.paths[scope.category] +  attrs.istoobig;
+        else  scope.istoobig=AppConfig.paths[scope.category] + 'istoobig.png';
         scope.noslider = attrs.noslider || false;
 
         if (!attrs.posturl) throw new TypeError('file-upload %s posturl=/api/xxxx/xxxx required', scope.attrs);            

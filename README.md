@@ -35,9 +35,9 @@ Install HTML5 development toolchain on your host
     };
     module.exports = config;
 
-    WARNING: in current version Frontend/services/ConfigApp.js is not updated automatically
+    WARNING: in current version Frontend/services/AppConfig.js is not updated automatically
     you should make sure than your backend config fit with your frontend config.
-    Note: FCS version should have ConfigApp.js configurated automatically from GULP, but this is for "tomorrow"
+    Note: FCS version should have AppConfig.js configurated automatically from GULP, but this is for "tomorrow"
 
 ### Build project
     gulp help

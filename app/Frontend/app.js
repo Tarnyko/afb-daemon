@@ -24,7 +24,7 @@
     'ui-notification',
     
     // Application Components
-    'ConfigApp',
+    'AppConfig',
     'JQueryEmu',
     'HomeModule',
     'SampleModule',
@@ -41,7 +41,7 @@
 
   config.$inject = ['$urlRouterProvider', '$locationProvider'];
   
-  function config($urlProvider, $locationProvider, ConfigApp) {
+  function config($urlProvider, $locationProvider, AppConfig) {
     $urlProvider.otherwise('/home');
 
     // https://docs.angularjs.org/error/$location/nobase

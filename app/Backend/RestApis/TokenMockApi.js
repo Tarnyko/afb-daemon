@@ -37,7 +37,7 @@ function NewApi(handle, prefix) {
     scope.connected=false;
     
     // Simulate Client Context Session Creation
-    handle.app.post(prefix +'/create', function (req, res) {
+    handle.app.get(prefix +'/create', function (req, res) {
         handle.trace (scope, 1, "%s/create body=%s", prefix, req.body.action);
         var okResponse= '{ "jtype": "AJB_reply"' +
                         ', "request": { "prefix": "afbs", "api": "create", "uuid": "e4ef5e66-xxxx", "token": "123456789-xxxxx", "status": "processed" }'+
@@ -57,7 +57,7 @@ function NewApi(handle, prefix) {
     
     
     // Simulate Client Context Check
-    handle.app.post(prefix +'/check', function (req, res) {
+    handle.app.get(prefix +'/check', function (req, res) {
         handle.trace (scope, 1, "%s/check query=%s", prefix, req.query.token);
         var okResponse= '{"jtype":"AJB_reply"'+
                         ',"request":{"prefix":"afbs","api":"check", "status":"processed"}'+
@@ -73,7 +73,7 @@ function NewApi(handle, prefix) {
     });
     
     // Simulate Client Context Check
-    handle.app.post(prefix +'/refresh', function (req, res) {
+    handle.app.get(prefix +'/refresh', function (req, res) {
         handle.trace (scope, 1, "%s/refresh query=%s", prefix, req.query.token);
         var okResponse= '{"jtype":"AJB_reply"'+
                         ',"request":{"prefix":"afbs","api":"refresh","uuid": "e4ef5e66-xxxx", "token": "123456789-xxxxx","status":"processed"}'+
@@ -89,7 +89,7 @@ function NewApi(handle, prefix) {
     });
 
         // Simulate Client Context Session Closing
-    handle.app.post(prefix +'/reset', function (req, res) {
+    handle.app.get(prefix +'/reset', function (req, res) {
         handle.trace (scope, 1, "%s/reset query=%s", prefix, req.query.token);
         var okResponse= '{"jtype":"AJB_reply"'+
                         ',"request":{"prefix":"afbs","api":"reset","uuid": "e4ef5e66-xxxx","status":"processed"}'+

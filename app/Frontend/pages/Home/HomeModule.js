@@ -1,12 +1,12 @@
 (function() {
 'use strict';
 
-// WARNING: make sure than app/frontend/services/ConfigApp.js match your server
+// WARNING: make sure than app/frontend/services/AppConfig.js match your server
 
 // list all rependencies within the page + controler if needed
 angular.module('HomeModule', ['SubmitButton', 'TokenRefresh'])
 
-  .controller('HomeController', function ($http, ConfigApp) {
+  .controller('HomeController', function ($http, AppConfig) {
         var scope = this; // I hate JavaScript
         scope.uuid   ="none";
         scope.token  ="none";
@@ -22,10 +22,10 @@ angular.module('HomeModule', ['SubmitButton', 'TokenRefresh'])
             scope.request  = data.request;
             scope.response = data.response;
             
-            // if token was refresh let's update ConfigApp
-            if (data.request.token) ConfigApp.session.token = data.request.token;
-            if (data.request.uuid)  ConfigApp.session.uuid  = data.request.uuid;
-            if (data.request.timeout)  ConfigApp.session.timeout  = data.request.timeout;
+            // if token was refresh let's update AppConfig
+            if (data.request.token) AppConfig.session.token = data.request.token;
+            if (data.request.uuid)  AppConfig.session.uuid  = data.request.uuid;
+            if (data.request.timeout)  AppConfig.session.timeout  = data.request.timeout;
 
             // Make sure we clean everything when Open/Close is called
             if (apiname === "APIcreate" || apiname === "APIreset") {
@@ -56,7 +56,7 @@ angular.module('HomeModule', ['SubmitButton', 'TokenRefresh'])
         scope.OpenSession = function() {
             console.log ("OpenSession"); 
             var postdata= {/* any json your application may need */};
-            var handler = $http.post(ConfigApp.session.create + '?token='+ConfigApp.session.initial, postdata);
+            var handler = $http.post(AppConfig.session.create + '?token='+AppConfig.session.initial, postdata);
             
             handler.success(scope.ProcessResponse);
             handler.error(scope.ProcessError);
@@ -65,7 +65,7 @@ angular.module('HomeModule', ['SubmitButton', 'TokenRefresh'])
         scope.CheckSession = function() {
             console.log ("CloseSession");
             var postdata= {/* any json your application may need */};
-            var handler = $http.post(ConfigApp.session.check + '?token='+ConfigApp.session.token, postdata);
+            var handler = $http.post(AppConfig.session.check + '?token='+AppConfig.session.token, postdata);
             
             handler.success(scope.ProcessResponse);
             handler.error(scope.ProcessError);
@@ -74,7 +74,7 @@ angular.module('HomeModule', ['SubmitButton', 'TokenRefresh'])
         scope.RefreshSession = function() {
             console.log ("RefreshSession");
             var postdata= {/* any json your application may need */};
-            var handler = $http.post(ConfigApp.session.refresh + '?token='+ConfigApp.session.token, postdata);
+            var handler = $http.post(AppConfig.session.refresh + '?token='+AppConfig.session.token, postdata);
             
             handler.success(scope.ProcessResponse);
             handler.error(scope.ProcessError);
@@ -83,7 +83,7 @@ angular.module('HomeModule', ['SubmitButton', 'TokenRefresh'])
         scope.ResetSession = function() {
             console.log ("ResetSession");
             var postdata= {/* any json your application may need */};
-            var handler = $http.post(ConfigApp.session.reset + '?token='+ConfigApp.session.token, postdata);
+            var handler = $http.post(AppConfig.session.reset + '?token='+AppConfig.session.token, postdata);
             
             handler.success(scope.ProcessResponse);
             handler.error(scope.ProcessError);
