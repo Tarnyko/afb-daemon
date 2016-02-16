@@ -34,14 +34,14 @@
 // scope module is load statically before any route is cativated
 angular.module('TokenRefresh', ['AppConfig', 'ModalNotification'])
 
-    .directive ('tokenRefresh', function($window, $timeout, $location, Notification, AppConfig, AppCall) {
+    .directive ('tokenRefresh', function($log, $window, $timeout, $location, Notification, AppConfig, AppCall) {
 
     function mymethods(scope, elem, attrs) {
         scope.logged=undefined; // neither thu neither false
         
         $window.onbeforeunload = function () {
-            AppCall.get ("token", "reset", {/*query*/}, function () {
-            console.log("OPA Exit Requested");                
+            AppCall.get ("token", "reset", {/*query*/}, function () {    
+            $log.log("OPA exit");            
             });
         };
                  
@@ -133,4 +133,3 @@ angular.module('TokenRefresh', ['AppConfig', 'ModalNotification'])
 
 })();
 console.log ("Token Refresh Loaded");
-
