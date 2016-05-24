@@ -15,26 +15,24 @@ angular.module('HomeModule', ['SubmitButton', 'TokenRefresh','ModalNotification'
 
         console.log ("Home Controller");
         
-        scope.ProcessResponse= function(data, errcode, headers, config) {
+        scope.OnResponse= function(jresp, errcode) {
             
-            if (data.request.status !== "success") {
-                Notification.error ({message: "Invalid API call:" + data.request.info , delay: 5000});
+            // Update UI response global display zone
+            scope.status   = jresp.request.status;
+            scope.errcode  = errcode;
+            scope.request  = jresp.request;
+            scope.response = jresp.response;
+            
+            if (jresp.request.status !== "success") {
+                Notification.error ({message: "Invalid API call:" + jresp.request.info , delay: 5000});
+                scope.class [jresp.request.reqid]="fail";   
                 return;
             }
             
-            // Update UI response global display zone
-            scope.status   = data.request.status;
-            scope.errcode  = errcode;
-            scope.request  = data.request;
-            scope.response = data.response;
-            
-            switch (data.request.reqid) {
-                case 'open':
+            switch (jresp.request.reqid) {
+                case 'create':
                 case 'reset':
-                    scope.APIreset  ='';
-                    scope.APIcreate ='';
-                    scope.APIrefresh='';
-                    scope.APIcheck  ='';
+                    scope.class={};
                     break;
                     
                 case 'refresh':
@@ -42,55 +40,48 @@ angular.module('HomeModule', ['SubmitButton', 'TokenRefresh','ModalNotification'
                     break;
                     
                 default:
-                    Notification.error ({message: "Invalid RequestID:" + data.request.reqid , delay: 5000});
+                    Notification.error ({message: "Invalid RequestID:" + jresp.request.reqid , delay: 5000});
                     return;
             } 
 
-            scope[reqid]="success";            
-            console.log ("OK: "+ JSON.stringify(data));
+            // update button classes within home.html
+            scope.class [jresp.request.reqid]="success";            
+            console.log ("OK: "+ JSON.stringify(jresp));
         };
         
-        scope.ProcessError= function(data, errcode, headers, config) {
-            Notification.error ({message: "Invalid API:" + data.request.reqid , delay: 5000});
+        scope.ProcessError= function(response, errcode, config) {
+            Notification.error ({message: "Invalid API:" + response.request.reqid , delay: 5000});
             scope.status   = "err-fx";
             scope.errcode  = errcode;
-            scope.request  = data.request;
+            scope.request  = response.request;
             scope.response = "";            
-            console.log ("FX: "+ JSON.stringify(data));
+            console.log ("FX: "+ JSON.stringify(response));
         };
 
         scope.OpenSession = function() {
             console.log ("OpenSession");
-            AppCall.get ("token", "create", {reqid:"open"}, scope.ProcessResponse, scope.InvalidApiCall);
+            AppCall.get ("token", "create", {/*query*/}, scope.OnResponse, scope.InvalidApiCall);
         };        
 
         scope.CheckSession = function() {
             console.log ("CloseSession");
+            AppCall.get ("token", "check", {/*query*/}, scope.OnResponse, scope.InvalidApiCall);
            
-            var postdata= {/* any json your application may need */};
-            var handler = $http.post(AppConfig.session.check + '?token='+AppConfig.session.token +'?idreq=open', postdata);
-            
-            handler.success(scope.ProcessResponse);
-            handler.error(scope.ProcessError);
         };
         
         scope.RefreshSession = function() {
             console.log ("RefreshSession");
-            var postdata= {/* any json your application may need */};
-            var handler = $http.post(AppConfig.session.refresh + '?token='+AppConfig.session.token, postdata);
-            
-            handler.success(scope.ProcessResponse);
-            handler.error(scope.ProcessError);
+            AppCall.get ("token", "refresh", {/*query*/}, scope.OnResponse, scope.InvalidApiCall);
         };
         
         scope.ResetSession = function() {
             console.log ("ResetSession");
-            var postdata= {/* any json your application may need */};
-            var handler = $http.post(AppConfig.session.reset + '?token='+AppConfig.session.token, postdata);
-            
-            handler.success(scope.ProcessResponse);
-            handler.error(scope.ProcessError);
+            AppCall.get ("token", "reset", {/*query*/}, scope.OnResponse, scope.InvalidApiCall);
         };
+        
+        scope.Initialised = function () {
+            scope.class = {create: "success"};
+        }
         
    });
 

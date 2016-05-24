@@ -11,15 +11,15 @@ animationIn: slideInRight
   App Framework Binder Simple Client
 </h3>
 
-<token-refresh autolog="true"></token-refresh>
+<token-refresh autolog="true" callback="ctrl.Initialised"></token-refresh>
 
 
 <div class="button-box box-content ">
       
-    <submit-button class="session-button {{ctrl.APIcreate}}"  icon="fi-unlock" label="Open" clicked="ctrl.OpenSession" ></submit-button>
-    <submit-button class="session-button {{ctrl.APIcheck}}" icon="fi-checkbox" label="Check" clicked="ctrl.CheckSession" ></submit-button>
-    <submit-button class="session-button {{ctrl.APIrefresh}}"  icon="fi-arrows-compress" label="Refresh"   clicked="ctrl.RefreshSession" ></submit-button>
-    <submit-button class="session-button {{ctrl.APIreset}}" icon="fi-lock" label="Close" clicked="ctrl.ResetSession" ></submit-button>
+    <submit-button class="session-button {{ctrl.class.create}}"  icon="fi-unlock" label="Open" clicked="ctrl.OpenSession" ></submit-button>
+    <submit-button class="session-button {{ctrl.class.check}}" icon="fi-checkbox" label="Check" clicked="ctrl.CheckSession" ></submit-button>
+    <submit-button class="session-button {{ctrl.class.refresh}}"  icon="fi-arrows-compress" label="Refresh"   clicked="ctrl.RefreshSession" ></submit-button>
+    <submit-button class="session-button {{ctrl.class.reset}}" icon="fi-lock" label="Close" clicked="ctrl.ResetSession" ></submit-button>
     
 </div>
 <div class="message-box box-content vertical grid-frame">

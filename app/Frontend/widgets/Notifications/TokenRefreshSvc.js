@@ -65,67 +65,73 @@ angular.module('TokenRefresh', ['AppConfig', 'ModalNotification'])
             scope.status = 0;
         };
         
-        scope.onsuccess = function(jresp) {
+        scope.onsuccess = function(jresp, errcode) {
             
-            if (jresp.request.status !== "success") {
+            if (errcode !== 200 || jresp.request.status !== "success") {
                 Notification.warning ({message: jresp.request.info, delay: 5000});
                 scope.offline(); 
-                return;
+                return false;
             }
             
-            if (jresp.request.token) AppConfig.session.token = jresp.request.token;
-            if (jresp.request.uuid)  AppConfig.session.uuid  = jresp.request.uuid;
-            if (jresp.request.timeout)  AppConfig.session.timeout  = jresp.request.timeout;
-            
             if (scope.logged !== true)  {
-                Notification.success ({message: "AppFramework Binder Back to Live", delay: 3000});
+                Notification.success ({message: "AppFramework Binder Connected", delay: 3000});
                 scope.online();
                 if (scope.callback) scope.callback(jresp);
             }
-            scope.status = 1;
+            
+            scope.status = 1;            
+            return true;
         };
 
         // Check Binder status
         scope.getping = function() {
             
             AppCall.get ("token", "ping", {/*query*/},function(jresp, errcode) {
-                if (errcode) scope.onerror();
-                else scope.onsuccess (jresp);
+                if (errcode !== 200 || jresp.request.status !== "success") {
+                    Notification.warning ({message: jresp.request.info, delay: 5000});
+                    scope.offline(); 
+                    return;
+                }
                 // restart a new timer for next ping
                 $timeout (scope.getping, AppConfig.session.pingrate*1000);
-            });
+            }, scope.onerror);
         };
         
         // Check Binder status
         scope.refresh = function() {
             
-            AppCall.get ("token", "refresh", {/*query*/},function(jresp, errcode) {
-                if (errcode) scope.onerror();
-                else scope.onsuccess (jresp);
+            AppCall.get ("token", "refresh", {/*query*/}, function(jresp, errcode) {
+
+                scope.onsuccess (jresp, errcode);
+                
                 // restart a new timer for next refresh
                 $timeout (scope.refresh, AppConfig.session.timeout *250);
-            });            
+            }, scope.onerror);            
         };
         
         // Initial connection
-        scope.tkcreate = function() {
-            
-            AppCall.get ("token", "create", {token: AppConfig.session.initial},function(jresp, errcode) {
-                if (errcode) scope.onerror();
-                else scope.onsuccess (jresp);
-            });                        
-        };
+        scope.loggin = function() {            
+            AppCall.get ("token", "create", {token: AppConfig.session.initial}, function(jresp, errcode) {
+                
+                if (!scope.onsuccess (jresp, errcode)) return;
+                
+                // Intial token was accepted let's start ping & refresh
+                $timeout (scope.getping, AppConfig.session.pingrate*1000);
+                $timeout (scope.refresh, AppConfig.session.timeout *250);
  
+            }, scope.onerror);
+        };
+
+
+        // Parse Widget Parameters
         scope.icon      = attrs.icon   || "fi-lightbulb";
         scope.hostname  = $location.host();
         scope.httpdport = $location.port();
         scope.autolog   = JSON.parse(attrs.autolog || false);
         
-        if (scope.autolog) scope.tkcreate();
-
-        // Init ping and refresh process
-        $timeout (scope.getping, AppConfig.session.pingrate*1000);
-        $timeout (scope.refresh, AppConfig.session.timeout *250);
+        // autostart log if requested
+        if (scope.autolog) scope.loggin();
+        
     }
 
     return {
@@ -140,4 +146,3 @@ angular.module('TokenRefresh', ['AppConfig', 'ModalNotification'])
 
 })();
 console.log ("Token Refresh Loaded");
-
