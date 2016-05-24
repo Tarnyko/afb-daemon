@@ -66,6 +66,13 @@ angular.module('TokenRefresh', ['AppConfig', 'ModalNotification'])
         };
         
         scope.onsuccess = function(jresp) {
+            
+            if (jresp.request.status !== "success") {
+                Notification.warning ({message: jresp.request.info, delay: 5000});
+                scope.offline(); 
+                return;
+            }
+            
             if (jresp.request.token) AppConfig.session.token = jresp.request.token;
             if (jresp.request.uuid)  AppConfig.session.uuid  = jresp.request.uuid;
             if (jresp.request.timeout)  AppConfig.session.timeout  = jresp.request.timeout;
@@ -81,9 +88,9 @@ angular.module('TokenRefresh', ['AppConfig', 'ModalNotification'])
         // Check Binder status
         scope.getping = function() {
             
-            AppCall.get ("token", "ping", {/*query*/},function(result) {
-                if (result.status === 200) scope.onsuccess (result.data);
-                else  scope.onerror();
+            AppCall.get ("token", "ping", {/*query*/},function(jresp, errcode) {
+                if (errcode) scope.onerror();
+                else scope.onsuccess (jresp);
                 // restart a new timer for next ping
                 $timeout (scope.getping, AppConfig.session.pingrate*1000);
             });
@@ -92,9 +99,9 @@ angular.module('TokenRefresh', ['AppConfig', 'ModalNotification'])
         // Check Binder status
         scope.refresh = function() {
             
-            AppCall.get ("token", "refresh", {/*query*/},function(result) {
-                if (result.status === 200) scope.onsuccess (result.data);
-                else  scope.onerror();
+            AppCall.get ("token", "refresh", {/*query*/},function(jresp, errcode) {
+                if (errcode) scope.onerror();
+                else scope.onsuccess (jresp);
                 // restart a new timer for next refresh
                 $timeout (scope.refresh, AppConfig.session.timeout *250);
             });            
@@ -103,9 +110,9 @@ angular.module('TokenRefresh', ['AppConfig', 'ModalNotification'])
         // Initial connection
         scope.tkcreate = function() {
             
-            AppCall.get ("token", "create", {token: AppConfig.session.initial},function(result) {
-                if (result.status === 200) scope.onsuccess (result.data);
-                else  scope.onerror();
+            AppCall.get ("token", "create", {token: AppConfig.session.initial},function(jresp, errcode) {
+                if (errcode) scope.onerror();
+                else scope.onsuccess (jresp);
             });                        
         };
  
@@ -133,3 +140,4 @@ angular.module('TokenRefresh', ['AppConfig', 'ModalNotification'])
 
 })();
 console.log ("Token Refresh Loaded");
+

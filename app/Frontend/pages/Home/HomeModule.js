@@ -4,9 +4,9 @@
 // WARNING: make sure than app/frontend/services/AppConfig.js match your server
 
 // list all rependencies within the page + controler if needed
-angular.module('HomeModule', ['SubmitButton', 'TokenRefresh'])
+angular.module('HomeModule', ['SubmitButton', 'TokenRefresh','ModalNotification'])
 
-  .controller('HomeController', function ($http, AppConfig) {
+  .controller('HomeController', function (AppCall, Notification) {
         var scope = this; // I hate JavaScript
         scope.uuid   ="none";
         scope.token  ="none";
@@ -16,56 +16,59 @@ angular.module('HomeModule', ['SubmitButton', 'TokenRefresh'])
         console.log ("Home Controller");
         
         scope.ProcessResponse= function(data, errcode, headers, config) {
-            var apiname= 'API'+ data.request.api.replace('-','_');
-            scope.status = "err-ok";
-            scope.errcode= errcode;
+            
+            if (data.request.status !== "success") {
+                Notification.error ({message: "Invalid API call:" + data.request.info , delay: 5000});
+                return;
+            }
+            
+            // Update UI response global display zone
+            scope.status   = data.request.status;
+            scope.errcode  = errcode;
             scope.request  = data.request;
             scope.response = data.response;
             
-            // if token was refresh let's update AppConfig
-            if (data.request.token) AppConfig.session.token = data.request.token;
-            if (data.request.uuid)  AppConfig.session.uuid  = data.request.uuid;
-            if (data.request.timeout)  AppConfig.session.timeout  = data.request.timeout;
+            switch (data.request.reqid) {
+                case 'open':
+                case 'reset':
+                    scope.APIreset  ='';
+                    scope.APIcreate ='';
+                    scope.APIrefresh='';
+                    scope.APIcheck  ='';
+                    break;
+                    
+                case 'refresh':
+                case 'check':
+                    break;
+                    
+                default:
+                    Notification.error ({message: "Invalid RequestID:" + data.request.reqid , delay: 5000});
+                    return;
+            } 
 
-            // Make sure we clean everything when Open/Close is called
-            if (apiname === "APIcreate" || apiname === "APIreset") {
-                scope.APIreset  ='';
-                scope.APIcreate ='';
-                scope.APIrefresh='';
-                scope.APIcheck  ='';
-            }
-            scope[apiname]="success";
-            
-            // If we have a new token let's update it
-            if (data.request.token) scope.token=data.request.token;
-            
+            scope[reqid]="success";            
             console.log ("OK: "+ JSON.stringify(data));
         };
         
         scope.ProcessError= function(data, errcode, headers, config) {
-            var apiname= 'API'+data.request.api.replace('-','_');
+            Notification.error ({message: "Invalid API:" + data.request.reqid , delay: 5000});
             scope.status   = "err-fx";
             scope.errcode  = errcode;
             scope.request  = data.request;
-            scope.response = "";
-            scope[apiname]="fail";
-            
+            scope.response = "";            
             console.log ("FX: "+ JSON.stringify(data));
         };
 
         scope.OpenSession = function() {
-            console.log ("OpenSession"); 
-            var postdata= {/* any json your application may need */};
-            var handler = $http.post(AppConfig.session.create + '?token='+AppConfig.session.initial, postdata);
-            
-            handler.success(scope.ProcessResponse);
-            handler.error(scope.ProcessError);
+            console.log ("OpenSession");
+            AppCall.get ("token", "create", {reqid:"open"}, scope.ProcessResponse, scope.InvalidApiCall);
         };        
 
         scope.CheckSession = function() {
             console.log ("CloseSession");
+           
             var postdata= {/* any json your application may need */};
-            var handler = $http.post(AppConfig.session.check + '?token='+AppConfig.session.token, postdata);
+            var handler = $http.post(AppConfig.session.check + '?token='+AppConfig.session.token +'?idreq=open', postdata);
             
             handler.success(scope.ProcessResponse);
             handler.error(scope.ProcessError);
