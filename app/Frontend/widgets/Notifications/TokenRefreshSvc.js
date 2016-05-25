@@ -86,7 +86,7 @@ angular.module('TokenRefresh', ['AppConfig', 'ModalNotification'])
         // Check Binder status
         scope.getping = function() {
             
-            AppCall.get ("token", "ping", {/*query*/},function(jresp, errcode) {
+            AppCall.get (scope.plugin, "ping", {/*query*/},function(jresp, errcode) {
                 if (errcode !== 200 || jresp.request.status !== "success") {
                     Notification.warning ({message: jresp.request.info, delay: 5000});
                     scope.offline(); 
@@ -100,7 +100,7 @@ angular.module('TokenRefresh', ['AppConfig', 'ModalNotification'])
         // Check Binder status
         scope.refresh = function() {
             
-            AppCall.get ("token", "refresh", {/*query*/}, function(jresp, errcode) {
+            AppCall.get (scope.plugin, "refresh", {/*query*/}, function(jresp, errcode) {
 
                 scope.onsuccess (jresp, errcode);
                 
@@ -111,7 +111,7 @@ angular.module('TokenRefresh', ['AppConfig', 'ModalNotification'])
         
         // Initial connection
         scope.loggin = function() {            
-            AppCall.get ("token", "create", {token: AppConfig.session.initial}, function(jresp, errcode) {
+            AppCall.get (scope.plugin, "login", {token: AppConfig.session.initial}, function(jresp, errcode) {
                 
                 if (!scope.onsuccess (jresp, errcode)) return;
                 
@@ -124,6 +124,7 @@ angular.module('TokenRefresh', ['AppConfig', 'ModalNotification'])
 
 
         // Parse Widget Parameters
+        scope.plugin    = attrs.plugin || "auth";
         scope.icon      = attrs.icon   || "fi-lightbulb";
         scope.hostname  = $location.host();
         scope.httpdport = $location.port();

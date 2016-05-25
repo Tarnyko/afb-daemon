@@ -30,8 +30,8 @@ angular.module('HomeModule', ['SubmitButton', 'TokenRefresh','ModalNotification'
             }
             
             switch (jresp.request.reqid) {
-                case 'create':
-                case 'reset':
+                case 'login':
+                case 'logout':
                     scope.class={};
                     break;
                     
@@ -58,29 +58,29 @@ angular.module('HomeModule', ['SubmitButton', 'TokenRefresh','ModalNotification'
             console.log ("FX: "+ JSON.stringify(response));
         };
 
-        scope.OpenSession = function() {
-            console.log ("OpenSession");
-            AppCall.get ("token", "create", {/*query*/}, scope.OnResponse, scope.InvalidApiCall);
+        scope.LoginClient = function() {
+            console.log ("LoginClient");
+            AppCall.get ("auth", "login", {/*query*/}, scope.OnResponse, scope.InvalidApiCall);
         };        
 
         scope.CheckSession = function() {
-            console.log ("CloseSession");
-            AppCall.get ("token", "check", {/*query*/}, scope.OnResponse, scope.InvalidApiCall);
+            console.log ("CheckSession");
+            AppCall.get ("auth", "check", {/*query*/}, scope.OnResponse, scope.InvalidApiCall);
            
         };
         
         scope.RefreshSession = function() {
             console.log ("RefreshSession");
-            AppCall.get ("token", "refresh", {/*query*/}, scope.OnResponse, scope.InvalidApiCall);
+            AppCall.get ("auth", "refresh", {/*query*/}, scope.OnResponse, scope.InvalidApiCall);
         };
         
-        scope.ResetSession = function() {
-            console.log ("ResetSession");
-            AppCall.get ("token", "reset", {/*query*/}, scope.OnResponse, scope.InvalidApiCall);
+        scope.LogoutClient = function() {
+            console.log ("LogoutClient");
+            AppCall.get ("auth", "logout", {/*query*/}, scope.OnResponse, scope.InvalidApiCall);
         };
         
         scope.Initialised = function () {
-            scope.class = {create: "success"};
+            scope.class = {login: "success"};
         }
         
    });
