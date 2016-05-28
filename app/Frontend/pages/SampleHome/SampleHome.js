@@ -4,9 +4,9 @@
 // WARNING: make sure than app/frontend/services/AppConfig.js match your server
 
 // list all rependencies within the page + controler if needed
-angular.module('HomeModule', ['SubmitButton', 'TokenRefresh','ModalNotification'])
+angular.module('SampleHomeModule', ['SamplePostModule', 'SubmitButton', 'TokenRefresh','ModalNotification'])
 
-  .controller('HomeController', function (AppCall, Notification) {
+  .controller('SampleHomeController', function (AppCall, Notification) {
         var scope = this; // I hate JavaScript
         scope.uuid   ="none";
         scope.token  ="none";
@@ -23,20 +23,35 @@ angular.module('HomeModule', ['SubmitButton', 'TokenRefresh','ModalNotification'
             scope.request  = jresp.request;
             scope.response = jresp.response;
             
-            if (jresp.request.status !== "success") {
-                Notification.error ({message: "Invalid API call:" + jresp.request.info , delay: 5000});
-                scope.class [jresp.request.reqid]="fail";   
-                return;
-            }
-            
-            switch (jresp.request.reqid) {
-                case 'login':
-                case 'logout':
-                    scope.class={};
+            var action=jresp.request.reqid.toUpperCase();
+                        
+            switch (action) {
+                case 'CONNECT':
+                    if (jresp.request.status !== "success") {
+                        Notification.error ({message: action + ": Logout before reconnecting", delay: 5000});
+                        scope.class [jresp.request.reqid]="fail";   
+                        return;
+                    }                    
+                    scope.class={}; // reset CSS buttons classes
                     break;
                     
-                case 'refresh':
-                case 'check':
+                case 'LOGOUT':
+                    if (jresp.request.status !== "success") {
+                        Notification.error ({message: action + ": Do connect first", delay: 5000});
+                        scope.class [jresp.request.reqid]="fail";   
+                        return;
+                    }
+                    scope.class={}; // reset CSS buttons classes
+                    break;
+                    
+                case 'REFRESH':
+                case 'CHECK':
+                    if (jresp.request.status !== "success") {
+                        Notification.error ({message: action + ": Need to be Connected to check/refresh session", delay: 5000});
+                        scope.class [jresp.request.reqid]="fail";   
+                        return;
+                    }
+                    
                     break;
                     
                 default:
@@ -58,9 +73,9 @@ angular.module('HomeModule', ['SubmitButton', 'TokenRefresh','ModalNotification'
             console.log ("FX: "+ JSON.stringify(response));
         };
 
-        scope.LoginClient = function() {
-            console.log ("LoginClient");
-            AppCall.get ("auth", "login", {/*query*/}, scope.OnResponse, scope.InvalidApiCall);
+        scope.ConnectClient = function() {
+            console.log ("ConnectClient");
+            AppCall.get ("auth", "connect", {/*query*/}, scope.OnResponse, scope.InvalidApiCall);
         };        
 
         scope.CheckSession = function() {
@@ -80,8 +95,8 @@ angular.module('HomeModule', ['SubmitButton', 'TokenRefresh','ModalNotification'
         };
         
         scope.Initialised = function () {
-            scope.class = {login: "success"};
-        }
+            scope.class = {connect: "success"};
+        };
         
    });
 

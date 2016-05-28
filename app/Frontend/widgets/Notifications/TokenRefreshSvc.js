@@ -68,7 +68,7 @@ angular.module('TokenRefresh', ['AppConfig', 'ModalNotification'])
         scope.onsuccess = function(jresp, errcode) {
             
             if (errcode !== 200 || jresp.request.status !== "success") {
-                Notification.warning ({message: jresp.request.info, delay: 5000});
+                Notification.warning ({message: "auto-connect :" + jresp.request.info, delay: 10000});
                 scope.offline(); 
                 return false;
             }
@@ -111,7 +111,7 @@ angular.module('TokenRefresh', ['AppConfig', 'ModalNotification'])
         
         // Initial connection
         scope.loggin = function() {            
-            AppCall.get (scope.plugin, "login", {token: AppConfig.session.initial}, function(jresp, errcode) {
+            AppCall.get (scope.plugin, "connect", {token: AppConfig.session.initial}, function(jresp, errcode) {
                 
                 if (!scope.onsuccess (jresp, errcode)) return;
                 

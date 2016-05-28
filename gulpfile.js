@@ -23,7 +23,6 @@ config=require (appdir + "etc/_Config"); // upload user local preferences if any
 // Run node in debug mode in developpement mode ?
 var nodeopts = config.DEBUG !== undefined ? '--debug='+config.DEBUG : ''; 
 var frontend= appdir + config.FRONTEND;
-var backend = appdir + config.BACKEND;
 
 var paths = {
     application : frontend,
@@ -35,7 +34,6 @@ var paths = {
     partials    : [frontend + '/**/*.html', '!' + frontend +'/index.html'],
     distDev     : './dist.dev',
     distProd    : './dist.prod',
-    scriptsDevServer: backend + '/**/*.js',
     sass:  [frontend+'/styles', 'bower_components/foundation-apps/scss','bower_components/foundation-icon-fonts'],
     fonts: ['bower_components/**/*.woff'],
     favicon: frontend+'/favicon.ico'
@@ -103,11 +101,6 @@ pipes.builtVendorScriptsProd = function() {
         .pipe(gulp.dest(paths.distProd+ '/bower_components'));
 };
 
-pipes.validatedDevServerScripts = function() {
-    return gulp.src(paths.scriptsDevServer)
-        .pipe(plugins.jshint())
-        .pipe(plugins.jshint.reporter('jshint-stylish'));
-};
 
 pipes.validatedPartials = function() {
     return gulp.src(paths.partials)
@@ -279,16 +272,7 @@ pipes.builtAppProd = function() {
 gulp.task('help', taskListing.withFilters(/-/));
    
 // clean, build of production environement
-gulp.task('build', ['clean-build-app-prod', 'validate-devserver-scripts']);
-
-gulp.task('run', function() {
-    // start nodemon to auto-reload the dev server
-    plugins.nodemon({ script: 'server.js', ext: 'js', watch: ['devServer/']})
-        .on('change', ['validate-devserver-scripts'])
-        .on('restart', function () {
-            console.log('[nodemon] restarted dev server');
-        });
-});       
+gulp.task('build', ['clean-build-app-prod']);
 
 // removes all compiled dev files
 gulp.task('clean-dev', function() {
@@ -319,9 +303,6 @@ gulp.task('build-partials-dev', pipes.builtPartialsDev);
 
 // converts partials to javascript using html2js
 gulp.task('convert-partials-to-js', pipes.scriptedPartials);
-
-// runs jshint on the dev server scripts
-gulp.task('validate-devserver-scripts', pipes.validatedDevServerScripts);
 
 // runs jshint on the app scripts
 gulp.task('validate-app-scripts', pipes.validatedAppScripts);
@@ -363,23 +344,7 @@ gulp.task('clean-build-app-dev', ['clean-dev'], pipes.builtAppDev);
 gulp.task('clean-build-app-prod', ['clean-prod'], pipes.builtAppProd);
 
 // clean, build, and watch live changes to the dev environment
-gulp.task('watch-dev', ['clean-build-app-dev', 'validate-devserver-scripts'], function() {
-
-    // start nodemon to auto-reload the dev server
-    plugins.nodemon({  exec: 'node ' + nodeopts, script: backend+'/server.js', ext: 'js', watch: [backend], env: {NODE_ENV : 'dev'} })
-        .on('change', ['validate-devserver-scripts'])
-        .on('restart', function () {
-            console.log('[nodemon] restarted dev server');
-        });
-
-    // start live-reload server
-    plugins.livereload.listen({ start: true });
-
-    // watch index
-    gulp.watch(paths.index, function() {
-        return pipes.builtIndexDev()
-            .pipe(plugins.livereload());
-    });
+gulp.task('watch-dev', ['clean-build-app-dev'], function() {
 
     // watch app scripts
     gulp.watch(paths.scripts, function() {
@@ -408,17 +373,7 @@ gulp.task('watch-dev', ['clean-build-app-dev', 'validate-devserver-scripts'], fu
 });
 
 // clean, build, and watch live changes to the prod environment
-gulp.task('watch-prod', ['clean-build-app-prod', 'validate-devserver-scripts'], function() {
-
-    // start nodemon to auto-reload the dev server
-    plugins.nodemon({ script: backend +'/server.js', ext: 'js', watch: [backend], env: {MODE : 'prod'} })
-        .on('change', ['validate-devserver-scripts'])
-        .on('restart', function () {
-            console.log('[nodemon] restarted dev server');
-        });
-
-    // start live-reload server
-    plugins.livereload.listen({start: true});
+gulp.task('watch-prod', ['clean-build-app-prod'], function() {
 
     // watch index
     gulp.watch(paths.index, function() {

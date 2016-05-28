@@ -157,7 +157,7 @@ angular.module('UploadFiles',['AppConfig', 'ModalNotification', 'RangeSlider'])
         };
 
         // Initiallize default values from attributes values
-        scope.name= attrs.name || 'avatar';
+        scope.name= attrs.name || 'file';
         scope.category= attrs.category  || 'image';
         scope.mimetype= (attrs.accept || 'image') + '/*';
         scope.maxsize= attrs.maxsize || 100; // default max size 100KB

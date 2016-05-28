@@ -10,9 +10,7 @@
                 var myConfig = {
                     paths: { // Warning paths should end with /
                         image : 'images/',
-                        avatar: 'images/avatars/',
-                        audio : 'images/audio/',
-                        appli : 'images/appli/'
+                        avatar: 'images/avatars/'
                     },
                                         
                     session: { // Those data are updated by session service

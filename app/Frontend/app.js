@@ -26,8 +26,7 @@
     // Application Components
     'AppConfig',
     'JQueryEmu',
-    'HomeModule',
-    'SampleModule',
+    'SampleHomeModule',
     'UploadFiles',
     'LinkButton',
     'TokenRefresh',
@@ -42,7 +41,7 @@
   config.$inject = ['$urlRouterProvider', '$locationProvider'];
   
   function config($urlProvider, $locationProvider, AppConfig) {
-    $urlProvider.otherwise('/home');
+    $urlProvider.otherwise('/sample-home');
 
     // https://docs.angularjs.org/error/$location/nobase
     $locationProvider.html5Mode(true).hashPrefix('!');

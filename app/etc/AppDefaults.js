@@ -25,18 +25,7 @@ config = {
     FRONTEND: "Frontend",    // HTML5 frontend  [no leading ./]
     BACKEND : "Backend",     // NodeJS Rest API [no leading ./]
     URLBASE : '/opa/',       // HTML basedir when running in production [should end with a /]
-    APIBASE : '/api/',       // Api url base dir [should end with a /]
-    DEBUG   : 4001,          // Node Debug Port
-    DBG_LVL : 5,             // Debug Trace Level 0=no trace.
-    
-    UPLOAD_DIR: '/tmp/uploads',  // directory destination for uploaded files [/api/post/upload]
-    
-    // EXPRESS WEB server config [note: URLBASE generate rewriting rules]
-    EXPRESS_HOST    : 'localhost',         // HTTP will only listen on related Internet interface
-    EXPRESS_PORT    : 4000,                // HTTP port
-    EXPRESS_LOGDIR  : __dirname + '/../../log',  // httpd log file
-    EXPRESS_SECRET  : Math.random().toString(36).slice(2), // [default cookie session]
-    EXPRESS_SESSION : SESSION_TIMEOUT
+    APIBASE : '/api/'        // Api url base dir [should end with a /]
 };
 
 module.exports = config;

@@ -1,8 +1,8 @@
 <!-- Foundation Annotations generate tmp/route.js -->
 ---
-name: mysample
-url:  /sample
-controller:   SampleController as ctrl
+name: PostSample
+url:  /sample-post
+controller:   SamplePostController as ctrl
 animationIn: slideInRight
 ---
 
@@ -20,15 +20,9 @@ animationIn: slideInRight
          maxsize  = [xxx] maximum size in KB [default max depend on upload-type]
          accept = [image] acceptable accept for upload
     -->
-    <upload-image name="avatar" category="avatar" thumbnail="tux-visitor.png" maxsize="100" 
+    <upload-image category="avatar" thumbnail="tux-visitor.png" maxsize="100" 
         posturl="/api/post/upload-image" callback="ctrl.FileUploaded" accept="image" title="Change your Avatar">
     </upload-image>
-    
-    <!-- Warning: name=xxx should match with what server expect [used as xform input name -->
-    <upload-audio  name="music" posturl="/api/post/upload-music" callback="ctrl.FileUploaded" title="Upload your Music"></upload-audio>
-
-    <!-- Warning: name=xxx should match with what server expect [used as xform input name -->
-    <upload-appli  name="appli" posturl="/api/post/upload-appli" callback="ctrl.FileUploaded" title="Upload AGL App"></upload-appli>
 
 </div>
 

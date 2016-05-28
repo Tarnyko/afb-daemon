@@ -21,7 +21,7 @@
 (function () {
     'use strict';
 
-    var tmpl = '<div  ng-click="clicked()"> <span>' +
+    var tmpl = '<div  ng-click="clicked()">' +
             '<i class="{{icon}}"></i>' +
             '<span>{{label}}</span>' +
             '</div>';
