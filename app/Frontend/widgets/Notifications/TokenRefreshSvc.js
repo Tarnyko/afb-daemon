@@ -40,7 +40,7 @@ angular.module('TokenRefresh', ['AppConfig', 'ModalNotification'])
         scope.logged=undefined; // neither thu neither false
         
         $window.onbeforeunload = function () {
-            AppCall.get ("token", "reset", {/*query*/}, function () {    
+            AppCall.get (scope.plugin, "logout", {/*query*/}, function () {    
             $log.log("OPA exit");            
             });
         };
